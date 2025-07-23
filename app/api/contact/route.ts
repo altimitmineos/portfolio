@@ -1,8 +1,10 @@
 // app/api/contact/route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { sendEmail } from "@/lib/mail"; // optional
 import { z } from "zod";
+
+// tell Next.js this route is dynamic (to avoid static analysis issues)
+export const dynamic = "force-dynamic";
 
 const ContactSchema = z.object({
   name: z.string().min(1),
@@ -14,14 +16,14 @@ const ContactSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("✅ Received form data:", body);
     const parsed = ContactSchema.parse(body);
 
-    // Store to DB
+    // Save to DB
     const saved = await prisma.contact.create({ data: parsed });
 
-    // Optional: Send email
-    await sendEmail(parsed); // remove if not needed
+    // Dynamically import sendEmail so Next doesn't include it during build
+    const { sendEmail } = await import("@/lib/send-email");
+    await sendEmail(parsed);
 
     return NextResponse.json({ success: true, data: saved });
   } catch (err: unknown) {
