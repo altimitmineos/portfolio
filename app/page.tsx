@@ -98,7 +98,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#e0e7f5]">
       <header className="fixed top-0 left-0 w-full z-50 h-20 flex items-center justify-between px-4 sm:px-6 md:px-10 lg:px-20 bg-[#c2d4f9] shadow-lg shadow-slate-400">
-        <h1 className="text-2xl font-extrabold font-nunito">Hamdi's Portfolio</h1>
+        <h1 className="text-2xl font-extrabold font-nunito">Hamdi&apos;s Portfolio</h1>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex gap-9 text-lg font-bold">
@@ -199,7 +199,7 @@ export default function Home() {
                 variants={itemVariants}
                 className="text-lg md:text-xl leading-relaxed font-nunito mb-6"
               >
-                I'm Muhammad Khidir Alhamdi, a passionate software developer driven by a love for
+                I&apos;m Muhammad Khidir Alhamdi, a passionate software developer driven by a love for
                 cutting-edge technology and innovation. My current focus is on full-stack development
                 and artificial intelligence, with a growing interest in blockchain technology. With a
                 background in computer science, I strive to build projects that help make the world a

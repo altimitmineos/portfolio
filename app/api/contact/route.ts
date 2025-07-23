@@ -24,7 +24,10 @@ export async function POST(req: Request) {
     await sendEmail(parsed); // remove if not needed
 
     return NextResponse.json({ success: true, data: saved });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Unknown error occurred." }, { status: 400 });
   }
 }
