@@ -17,6 +17,13 @@ import { div } from "framer-motion/client";
 
 export default function Home() {
 
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    phone?: string;
+    message?: string;
+  }>({});
+
   const [showTools, setShowTools] = useState(false);
 
   const skills = [
@@ -407,13 +414,33 @@ export default function Home() {
                     phone: HTMLInputElement;
                     message: HTMLTextAreaElement;
                   };
+
                   const data = {
-                    name: form.name.value,
-                    email: form.email.value,
-                    phone: form.phone.value,
-                    message: form.message.value,
+                    name: form.name.value.trim(),
+                    email: form.email.value.trim(),
+                    phone: form.phone.value.trim(),
+                    message: form.message.value.trim(),
                   };
 
+                  const newErrors: typeof errors = {};
+
+                  if (!data.name) newErrors.name = "Name is required.";
+                  if (!data.email) newErrors.email = "Email is required.";
+                  else if (!/^\S+@\S+\.\S+$/.test(data.email))
+                    newErrors.email = "Invalid email format.";
+                  if (!data.phone) newErrors.phone = "Phone is required.";
+                  else if (data.phone.length < 8)
+                    newErrors.phone = "Phone number must be at least 8 characters.";
+                  if (!data.message) newErrors.message = "Message is required.";
+                  else if (data.message.length < 10)
+                    newErrors.message = "Message must be at least 10 characters.";
+
+                  if (Object.keys(newErrors).length > 0) {
+                    setErrors(newErrors);
+                    return;
+                  }
+
+                  setErrors({});
                   const res = await fetch("/api/contact", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -430,7 +457,7 @@ export default function Home() {
               >
                 <div>
                   <label className="text-sm font-medium">Name</label>
-                  <div className="flex items-center border rounded px-3 bg-white">
+                  <div className={`flex items-center border rounded px-3 bg-white ${errors.name ? 'border-red-500' : 'border-gray-300'}`}>
                     <User className="h-4 w-4 text-black mr-2" />
                     <input
                       name="name"
@@ -439,11 +466,14 @@ export default function Home() {
                       className="flex-1 py-2 bg-transparent outline-none text-sm"
                     />
                   </div>
+                  {errors.name && (
+                    <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="text-sm font-medium">Email</label>
-                  <div className="flex items-center border rounded px-3 bg-white">
+                  <div className={`flex items-center border rounded px-3 bg-white ${errors.email ? 'border-red-500' : 'border-gray-300'}`}>
                     <Mail className="h-4 w-4 text-black mr-2" />
                     <input
                       name="email"
@@ -452,11 +482,14 @@ export default function Home() {
                       className="flex-1 py-2 bg-transparent outline-none text-sm"
                     />
                   </div>
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="text-sm font-medium">Phone</label>
-                  <div className="flex items-center border rounded px-3 bg-white">
+                  <div className={`flex items-center border rounded px-3 bg-white ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}>
                     <Phone className="h-4 w-4 text-black mr-2" />
                     <input
                       name="phone"
@@ -465,11 +498,14 @@ export default function Home() {
                       className="flex-1 py-2 bg-transparent outline-none text-sm"
                     />
                   </div>
+                  {errors.phone && (
+                    <p className="text-sm text-red-500 mt-1">{errors.phone}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="text-sm font-medium">Message</label>
-                  <div className="flex items-start border rounded px-3 bg-white">
+                  <div className={`flex items-center border rounded px-3 bg-white ${errors.message ? 'border-red-500' : 'border-gray-300'}`}>
                     <MessageSquare className="h-4 w-4 text-black mr-2 mt-3" />
                     <textarea
                       name="message"
@@ -477,6 +513,9 @@ export default function Home() {
                       className="flex-1 py-2 bg-transparent outline-none text-sm min-h-[120px] resize-none"
                     ></textarea>
                   </div>
+                  {errors.message && (
+                    <p className="text-sm text-red-500 mt-1">{errors.message}</p>
+                  )}
                 </div>
 
                 <Button type="submit" className="w-full">SEND</Button>
