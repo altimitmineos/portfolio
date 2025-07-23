@@ -17,20 +17,25 @@ const ContactSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("📦 Received body:", body); // ✅ Log the request body
+
     const parsed = ContactSchema.parse(body);
+    console.log("✅ Zod validated:", parsed); // ✅ Log parsed result
 
-    // Save to DB
     const saved = await prisma.contact.create({ data: parsed });
+    console.log("💾 Saved to DB:", saved); // ✅ Log DB result
 
-    // Dynamically import sendEmail so Next doesn't include it during build
     const { sendEmail } = await import("@/lib/send-email");
     await sendEmail(parsed);
 
     return NextResponse.json({ success: true, data: saved });
   } catch (err: unknown) {
+    console.error("❌ Error occurred:", err); // ✅ Log the actual error
+
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
     return NextResponse.json({ error: "Unknown error occurred." }, { status: 400 });
   }
 }
+
