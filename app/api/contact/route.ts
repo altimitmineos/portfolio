@@ -6,6 +6,7 @@ import { z } from "zod";
 // tell Next.js this route is dynamic (to avoid static analysis issues)
 export const dynamic = "force-dynamic";
 
+
 const ContactSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
