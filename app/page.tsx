@@ -80,7 +80,7 @@ export default function Home() {
     {
       title: "Portfolio Website",
       image: "/images/portfolio.png",
-      url: "https://github.com/altimitmineos/bookexchangeAOL",
+      url: "https://github.com/altimitmineos/portfolio",
     },
   ];
 
